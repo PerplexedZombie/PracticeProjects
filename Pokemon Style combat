@@ -1,0 +1,56 @@
+import random
+PCharHP = 20
+CharHP = PCharHP
+CharAttack = random.randint(10, 35)
+CharDefence = random.randint(8, 28)
+CharSpeed = random.randint(20, 100)
+CharAccuracy = random.randint(30, 80)
+CharPotion = 3 
+
+PEnemyHP = random.randint(5, 20)
+EnemyHP = PEnemyHP
+EnemyAttack = random.randint(10, 28)
+EnemyDefence = random.randint(10, 23)
+EnemySpeed = random.randint(20, 100)
+EnemyAccuracy = random.randint(30, 80)
+EnemyPotion = 3 
+
+
+options = ['Attack', 'Block', 'Potion',]
+def PokePrint():
+  print('         '.join(options[:2]))
+  print('')
+  print('         '.join(options[2:]))
+  
+def stats():
+  global CharHP
+  global EnemyHP
+  print('Your HP: ' + str(CharHP))
+  print('Enemy HP: ' + str(EnemyHP))
+  print('')
+
+def Catk():
+  global EnemyDefence
+  global CharAttack
+  DMG = ((CharAttack / EnemyDefence) / 2) * 10 
+  print('You deal ' + str(DMG) + ' damage')
+  
+def Eatk():
+  global CharDefence
+  global EnemyAttack
+  DMG = ((EnemyAttack / CharDefence) / 2) * 10 
+  print('Enemy deals ' + str(DMG) + ' damage')
+
+
+  
+while (EnemyHP >= 0) and (CharHP >= 0):
+  if CharSpeed > EnemySpeed:
+    EnemyChoice = options[random.randint(0, 2)]
+    x = input('I use ')
+    if x not in(options):
+      print('That isn\'t an option you can do')
+      continue
+    if x == 'Attack':
+      Catk()
+      EnemyHP = EnemyHP - DMG
+      stats()
