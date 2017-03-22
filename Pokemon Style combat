@@ -1,56 +1,273 @@
-import random
-PCharHP = 20
-CharHP = PCharHP
-CharAttack = random.randint(10, 35)
+#This is a program that uses a turn based combat system
+#It is also practise for object orientation
+
+
+import random #Random makes it different every time
+import time  #This is used to make timed gaps for readability
+
+
+#These make the stats for the character
+#For now the HP is locked at 20 to keep some consistency
+
+PCharHP = 20 #This stat creates a permanent stat to be checked
+#against or even to reset the HP
+CharHP = PCharHP #This sets the stat that will be used during 
+#program
+CharAttack = random.randint(10, 35) #Variable stats, yay 
 CharDefence = random.randint(8, 28)
+CDefHolder = CharDefence #Because I opted for a 'block' system
+#I needed a way to change the defence stat then return it to normal
 CharSpeed = random.randint(20, 100)
 CharAccuracy = random.randint(30, 80)
-CharPotion = 3 
+#This stat is presently unused, but I can dream
+CharPotion = 3 #Number of potions to stop abuse of healing
+
+
+#These are the same idea as above but for the enemy 
+#who is aptly named 'enemy'
 
 PEnemyHP = random.randint(5, 20)
 EnemyHP = PEnemyHP
 EnemyAttack = random.randint(10, 28)
 EnemyDefence = random.randint(10, 23)
+EDefHolder = EnemyDefence
 EnemySpeed = random.randint(20, 100)
 EnemyAccuracy = random.randint(30, 80)
 EnemyPotion = 3 
 
+DMG = 0 #For some reason this needed to be added to be able to 
+#use it in all the 'objects'
+options = ['Attack', 'Block', 'Potion',] #Lists the things you can
+#do so you know what actions can be taken
 
-options = ['Attack', 'Block', 'Potion',]
 def PokePrint():
+#This prints the options in a neat, almost
+#pokemon style, if only I had buttons
   print('         '.join(options[:2]))
   print('')
   print('         '.join(options[2:]))
+  print('')
   
 def stats():
+#This is named so for my convenience
+#This then prints the current situation with HP 
+#because tactics?
   global CharHP
   global EnemyHP
   print('Your HP: ' + str(CharHP))
   print('Enemy HP: ' + str(EnemyHP))
-  print('')
+  print('') #Gap for readability
 
 def Catk():
+#Object for when the character attacks
+  global DMG
   global EnemyDefence
   global CharAttack
-  DMG = ((CharAttack / EnemyDefence) / 2) * 10 
+  DMG = int(((CharAttack / EnemyDefence) / 2) * 10)
+#Using an int conversion here so that it will always be whole
+#numbers
+  if DMG == 0:
+    DMG = 1
+#Clause incase the whole number is 0, to ensure it keeps
+#moving forward
   print('You deal ' + str(DMG) + ' damage')
+  print('')
   
 def Eatk():
+#Object for when enemy attacks same as Catk 
+  global DMG
   global CharDefence
   global EnemyAttack
-  DMG = ((EnemyAttack / CharDefence) / 2) * 10 
+  DMG = int(((EnemyAttack / CharDefence) / 2) * 10)
+  if DMG == 0:
+    DMG = 1
   print('Enemy deals ' + str(DMG) + ' damage')
+  print('')
 
-
+def CPotion():
+#Object for character using a potion
+  global CharHP
+  global PCharHP
+  global CharPotion
+  print('Drank potion')
+  recovered = random.randint(5, 10) 
+#Random variables because f*ck tactics, pray to RNGesus!
+  print('Restored ' + str(recovered) + ' HP')
+  CharHP += recovered
+  if CharHP > PCharHP:
+    CharHP = PCharHP
+#Clause to ensure the recovered HP cannot exceed Maximum HP
+  CharPotion -= 1 
+#Creats a limit for the number of potions that goes down with uses
+  print('Remaining potions: ' + str(CharPotion))
+  print('')
   
+def EPotion():
+#Object for enemy using a potion, same as CPotion 
+  global EnemyHP
+  global PEnemyHP
+  global EnemyPotion
+  print('Drank potion')
+  recovered = random.randint(5, 10)
+  print('Restored ' + str(recovered) + ' HP')
+  EnemyHP += recovered
+  if EnemyHP > PEnemyHP:
+    EnemyHP = PEnemyHP
+  EnemyPotion -= 1 
+  print('Remaining potions: ' + str(EnemyPotion))
+  print('')
+  
+def clear():
+#Purely a readability object, just to stop the shell from becoming
+#cluttered and hard to follow
+  i = 0 
+  time.sleep(3)
+#time allows some time to read the screen
+  for i in range(1, 5):
+    print('')
+
+
+#This is mostly to ensure it's all working as intended
+def collectivestat():
+  print('HP: ' + str(CharHP))
+  print('Attack: ' + str(CharAttack))
+  print('Defence: ' + str(CharDefence))
+  print('Speed: ' + str(CharSpeed))
+  print('Number of potions: ' + str(CharPotion))
+  
+collectivestat()
+clear()
+
 while (EnemyHP >= 0) and (CharHP >= 0):
+#This begins the game
+#loops until someone has 0 or less HP
   if CharSpeed > EnemySpeed:
-    EnemyChoice = options[random.randint(0, 2)]
+#Because it's turn based, to make it 'fair' there is the 
+#possibility of either party going first
+#so there is two possible loops within the loop 
+    PokePrint()
     x = input('I use ')
+#Asks the user what they'd like to do then checks
+#that it's an option 
     if x not in(options):
       print('That isn\'t an option you can do')
       continue
     if x == 'Attack':
+#Option for attack 
       Catk()
       EnemyHP = EnemyHP - DMG
+      EnemyDefence = EDefHolder
       stats()
+      if EnemyHP <= 0:
+#Checks to see if the enemy is dead
+        break
+    if x == 'Block':
+#Option for block 
+      print('You brace for impact (Take less damage)')
+      CharDefence *= 100 
+#This basically means you take 1 damage
+#Seems unbalanced but hey ho 
+      EnemyDefence = EDefHolder
+#Had an issue of blocking persisted until it was hit
+#So after each round all the blocks reset 
+      stats()
+#Prints the current HP of parties
+    if x == 'Potion':
+#Option for potion including option for none left
+      if CharPotion == 0:
+        print('You don\'t have any potions left')
+        EnemyDefence = EDefHolder
+        continue
+      else:
+        CPotion()
+        EnemyDefence = EDefHolder
+        stats()
+    EnemyChoice = options[random.randint(0, 2)]
+#Enemy makes a choice by random selection
+#May make the enemy 'smarter' by only giving them the 
+#option of a potion if they are below a threshold of HP 
+#Meaning the enemy will always attack or block until low on HP 
+    print('Enemy used ' + str(EnemyChoice))
+#Going forward is same as before but for the enemy 
+    if EnemyChoice == 'Attack':
+      Eatk()
+      CharHP = CharHP - DMG
+      CharDefence = CDefHolder
+      stats()
+      clear()
+      if CharHP <= 0:
+        break
+    if EnemyChoice == 'Block':
+      print('Enemy braced for impact (Take less damage)')
+      EnemyDefence *= 100
+      CharDefence = CDefHolder
+      stats()
+      clear()
+    if EnemyChoice == 'Potion':
+      if EnemyPotion == 0:
+        CharDefence = CDefHolder
+        clear()
+        continue
+      else:
+        EPotion()
+        CharDefence = CDefHolder
+        stats()
+        clear()
+  if EnemySpeed > CharSpeed:
+    EnemyChoice = options[random.randint(0, 2)]
+    print('Enemy used ' + str(EnemyChoice))
+    if EnemyChoice == 'Attack':
+      Eatk()
+      CharHP = CharHP - DMG
+      CharDefence = CDefHolder
+      stats()
+      if CharHP <= 0:
+        break
+    if EnemyChoice == 'Block':
+      print('Enemy braced for impact (Take less damage)')
+      EnemyDefence *= 100
+      CharDefence = CDefHolder
+      stats()
+    if EnemyChoice == 'Potion':
+      if EnemyPotion == 0:
+        CharDefence = CDefHolder
+        continue
+      else:
+        EPotion()
+        CharDefence = CDefHolder
+        stats()
+    PokePrint()
+    x = input('I use ')
+    if x not in(options):
+      print('That isn\'t an option you can do')
+      clear()
+      continue
+    if x == 'Attack':
+      Catk()
+      EnemyHP = EnemyHP - DMG
+      EnemyDefence = EDefHolder
+      stats()
+      clear()
+      if EnemyHP <= 0:
+        break
+    if x == 'Block':
+      print('You brace for impact (Take less damage)')
+      CharDefence *= 100 
+      EnemyDefence = EDefHolder
+      clear()
+      stats()
+    if x == 'Potion':
+      if CharPotion == 0:
+        print('You don\'t have any potions left')
+        EnemyDefence = EDefHolder
+        clear()
+        continue
+      else:
+        CPotion()
+        EnemyDefence = EDefHolder
+        clear()
+        stats()
+if EnemyHP <= 0:
+  print('You won')
+if CharHP <= 0:
+  print('You lost')
