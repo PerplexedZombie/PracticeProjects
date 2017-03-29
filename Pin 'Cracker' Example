@@ -1,0 +1,37 @@
+import random
+import time 
+y = '0'
+Attempts = 0 
+attemptLog = []
+
+while True:
+  try:
+    pin = int(input('Pin:'))
+  except ValueError:
+    print('A personal identification NUMBER (Pin) \
+can funnily enough only be numbers')
+    continue
+  pin = str(pin)
+  if len(pin) != 4:
+    print('Your Pin has to be 4 numbers long')
+    continue
+  x = ''
+  while x != pin:
+    x = str(random.randint(0000, 9999))
+    if len(x) == 3:
+      x = y + x 
+    if len(x) == 2:
+      x = y * 2 + x 
+    if len(x) == 1:
+      x = y * 3 + x 
+    time.sleep(0.001)
+    if x in attemptLog:
+      continue
+    print(x)
+    attemptLog.append(x)
+    Attempts += 1
+    time.sleep(0.05)
+  if x == pin:
+    print('Success')
+    print('Took ' + str(Attempts) + ' attempts')
+  print('end')
