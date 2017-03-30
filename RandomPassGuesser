@@ -1,0 +1,33 @@
+import random
+import string 
+import time 
+
+attemptsMade = []
+word = str(input('What is the word to random?'))
+total = 0
+
+def attempt():
+  global guess
+  guess = ''
+  x = random.randint(8, 22)
+  while len(guess) != x:
+    y = random.choice(string.printable)
+    if y in string.whitespace:
+      continue
+    guess = guess + y 
+  
+while True:
+  attempt()
+  #print(guess)
+  total += 1
+  time.sleep(0.05)
+  #if total == 50:
+    #print(attemptsMade)
+  if guess == word:
+    break
+  if guess not in attemptsMade:
+    attemptsMade.append(guess)
+if guess == word:
+  print('Yes?')
+else:
+  print('kinda?')
