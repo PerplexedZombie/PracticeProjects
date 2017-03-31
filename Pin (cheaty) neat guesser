@@ -9,14 +9,30 @@ Attempts = 0
 rightCode = []
 
 while True:
+  pin = str(input('Pin: '))
+  if len(pin) != 4:
+    print('This can only be 4 numbers long')
+    continue
   try:
-    pin = int(input('Pin: '))
+    pin = int(pin)
   except ValueError:
     print('This needs to be a number')
     continue
   pin = str(pin)
-  if len(pin) != 4:
-    print('This can only be 4 numbers long')
+  if pin == '0':
+    print('That is a bad pin to use, also it breaks my code')
+    continue
+  if len(pin) == 3:
+    print('Starting with a 0 breaks my code')
+    print('So please don\'t do it')
+    continue
+  if len(pin) == 2:
+    print('Starting with a 0 breaks my code')
+    print('So please don\'t do it')
+    continue
+  if len(pin) == 1:
+    print('Starting with a 0 breaks my code')
+    print('So please don\'t do it')
     continue
   break
 
