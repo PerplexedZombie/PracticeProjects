@@ -39,6 +39,13 @@ while True:
 start = time.time()
 while code[0] != pin[0]:
   code = str(random.randint(0000, 9999))
+  if len(code) == 3:
+    code = '0' + code
+  if len(code) == 2:
+    code = '0' * 2 + code
+  if len(code) == 1:
+    code = '0' * 3 + code
+  
   Attempts += 1 
   if code in wrongCode:
     continue
