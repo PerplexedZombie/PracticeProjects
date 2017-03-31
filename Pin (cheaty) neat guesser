@@ -39,86 +39,69 @@ while True:
 start = time.time()
 while code[0] != pin[0]:
   code = str(random.randint(0000, 9999))
-  if len(code) == 3:
-    code = '0' + code
-  if len(code) == 2:
-    code = '0' * 2 + code
-  if len(code) == 1:
-    code = '0' * 3 + code 
   Attempts += 1 
   if code in wrongCode:
     continue
-  wrongCode.append(code)
   time.sleep(0.05)
   if code[0] == pin[0]:
     print(code)
     rightCode.append(code[0])
-  if code[1] == pin[1]:
-    rightCode.append(code[1])
-  if code[2] == pin[2]:
-    rightCode.append(code[2])
-  if code[3] == pin[3]:
-    rightCode.append(code[3])
+  wrongCode.append(code)
 while code[1] != pin[1]:
   a = int(int(rightCode[0]) * 1000)
   code = str(random.randint(a, a + 999))
-  Attempts += 1 
-  if code in wrongCode:
-    continue
-  wrongCode.append(code)
   if len(code) == 3:
     code = '0' + code
   if len(code) == 2:
     code = '0' * 2 + code
   if len(code) == 1:
-    code = '0' * 3 + code 
+    code = '0' * 3 + code
+  Attempts += 1 
+  if code in wrongCode:
+    continue
   time.sleep(0.05)
   if code[1] == pin[1]:
     print(code)
     rightCode.append(code[1])
-  if code[2] == pin[2]:
-    rightCode.append(code[2])
-  if code[3] == pin[3]:
-    rightCode.append(code[3])
+  wrongCode.append(code)
 while code[2] != pin[2]:
   a = int(int(rightCode[0]) * 1000)
   b = int(int(rightCode[1]) * 100)
   code = str(random.randint(a + b, a + b + 99))
-  Attempts += 1 
-  if code in wrongCode:
-    continue
-  wrongCode.append(code)
   if len(code) == 3:
     code = '0' + code
   if len(code) == 2:
     code = '0' * 2 + code
   if len(code) == 1:
-    code = '0' * 3 + code 
+    code = '0' * 3 + code
+  Attempts += 1 
+  if code in wrongCode:
+    continue
   time.sleep(0.05)
   if code[2] == pin[2]:
     print(code)
     rightCode.append(code[2])
-  if code[3] == pin[3]:
-    rightCode.append(code[3])
+  wrongCode.append(code)
 while code[3] != pin[3]:
   a = int(int(rightCode[0]) * 1000)
   b = int(int(rightCode[1]) * 100)
   c = int(int(rightCode[2]) * 10)
   code = str(random.randint(a + b + c, a + b + c + 9))
-  if code in wrongCode:
-    continue
-  Attempts += 1
-  wrongCode.append(code)
   if len(code) == 3:
     code = '0' + code
   if len(code) == 2:
     code = '0' * 2 + code
   if len(code) == 1:
-    code = '0' * 3 + code 
+    code = '0' * 3 + code
+  if code in wrongCode:
+    continue
+  Attempts += 1
   time.sleep(0.05)
   if code[3] == pin[3]:
     print(code)
-    rightCode.append(code[1])
+    rightCode.append(code[3])
+  wrongCode.append(code)
+print('Code is ' + code)
 print('That took ' + str(Attempts) + ' attempts')
 end = time.time() - start
 print('and ' + str(format(end, '.2f')) + ' seconds')
